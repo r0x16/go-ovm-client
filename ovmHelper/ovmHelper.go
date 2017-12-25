@@ -15,6 +15,7 @@ type Client struct {
 	BaseURL  *url.URL
 	client   *http.Client
 	Vms      *Vm
+	Jobs     *Job
 }
 
 func NewClient(user string, password string, baseUrl string) *Client {
@@ -26,6 +27,7 @@ func NewClient(user string, password string, baseUrl string) *Client {
 	//c.client = http.DefaultClient{Transport: tr}
 	c.client = &http.Client{Transport: tr}
 	c.Vms = &Vm{client: c}
+	c.Jobs = &Job{client: c}
 	return c
 }
 
@@ -58,9 +60,9 @@ func (pc *Client) Do(req *http.Request, v interface{}) (*http.Response, error) {
 	}
 	defer resp.Body.Close()
 
-	//body, err := ioutil.ReadAll(resp.Body)
+	//	body, err := ioutil.ReadAll(resp.Body)
 
-	//fmt.Println(string(body))
+	//	fmt.Println(string(body))
 
 	/*if err := validateResponse(resp); err != nil {
 		return resp, err
