@@ -1,6 +1,6 @@
 package ovmHelper
 
-type id struct {
+type Id struct {
 	Type  string `json:"type"`
 	Value string `json:"value"`
 	Uri   string `json:"uri"`
@@ -10,7 +10,7 @@ type id struct {
 type VmResponse struct {
 	//RepositoryId int64 `json:"repositoryId"`
 	//serverPoolId int64
-	Id   id     `json:"id"`
+	Id   Id     `json:"id"`
 	Name string `json:"name"`
 	//The following fields of the new Vm are optional:
 	//BootOrder          []string
@@ -42,15 +42,15 @@ type VmResponse struct {
 	VmConfigFileAbsolutePath string `json:""vmConfigFileAbsolutePath"`
 	VmConfigFileMountedPath  string `json:""vmConfigFileMountedPath"`
 	Architecture             string `json:""architecture"`
-	VmDiskMappingIds         []id   `json:"vmDiskMappingIds"`
-	VirtualNicIds            []id   `json:"virtualNicIds"`
-	RepositoryId             id     `json:"repositoryId"`
-	ServerPoolId             id     `json:"serverPoolId"`
-	ServerId                 id     `json:"serverId"`
+	VmDiskMappingIds         []Id   `json:"vmDiskMappingIds"`
+	VirtualNicIds            []Id   `json:"virtualNicIds"`
+	RepositoryId             Id     `json:"repositoryId"`
+	ServerPoolId             Id     `json:"serverPoolId"`
+	ServerId                 Id     `json:"serverId"`
 }
 
 type JobResponse struct {
-	Id   id   `json:"id"`
+	Id   Id   `json:"id"`
 	Done bool `json:"done"`
 	/*	ResulitId                    id     `json:"resourceGroupIds"`
 

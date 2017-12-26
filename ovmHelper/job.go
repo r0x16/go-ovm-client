@@ -5,7 +5,7 @@ type JobService struct {
 }
 
 func (j *JobService) Read(id string) (*JobResponse, error) {
-	req, err := j.client.NewRequest("GET", "/ovm/core/wsapi/rest/Job/"+id, nil)
+	req, err := j.client.NewRequest("GET", "/ovm/core/wsapi/rest/Job/"+id, nil, nil)
 	if err != nil {
 		return nil, err
 	}

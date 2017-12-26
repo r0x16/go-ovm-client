@@ -1,6 +1,7 @@
 package ovmHelper
 
 import (
+	"bytes"
 	"crypto/tls"
 	"encoding/json"
 	"fmt"
@@ -31,9 +32,8 @@ func NewClient(user string, password string, baseUrl string) *Client {
 	return c
 }
 
-func (pc *Client) NewRequest(method string, rsc string, params map[string]string) (*http.Request, error) {
+func (pc *Client) NewRequest(method string, rsc string, params map[string]string, data interface{}) (*http.Request, error) {
 	baseUrl, err := url.Parse(pc.BaseURL.String() + rsc)
-
 	if err != nil {
 		return nil, err
 	}
@@ -45,11 +45,15 @@ func (pc *Client) NewRequest(method string, rsc string, params map[string]string
 		}
 		baseUrl.RawQuery = ps.Encode()
 	}
-
 	req, err := http.NewRequest(method, baseUrl.String(), nil)
+	if data != nil {
+		jsonString, _ := json.Marshal(data)
+		req, err = http.NewRequest(method, baseUrl.String(), bytes.NewBuffer(jsonString))
+	}
 	req.SetBasicAuth(pc.User, pc.Password)
 	req.Header.Add("content-type", "application/json; charset=utf-8")
 	req.Header.Add("Accept", "application/json")
+	req.Header.Set("Content-Type", "application/json")
 	return req, err
 }
 
