@@ -5,11 +5,11 @@ import (
 	"time"
 )
 
-type Vm struct {
+type VmService struct {
 	client *Client
 }
 
-func (v *Vm) Read(id string) (*VmResponse, error) {
+func (v *VmService) Read(id string) (*VmResponse, error) {
 	req, err := v.client.NewRequest("GET", "/ovm/core/wsapi/rest/Vm/"+id, nil)
 	if err != nil {
 		return nil, err
@@ -25,7 +25,7 @@ func (v *Vm) Read(id string) (*VmResponse, error) {
 	return m, err
 }
 
-func (v *Vm) Stop(id string) error {
+func (v *VmService) Stop(id string) error {
 	req, err := v.client.NewRequest("PUT", "/ovm/core/wsapi/rest/Vm/"+id+"/stop", nil)
 	if err != nil {
 		return err
@@ -45,7 +45,7 @@ func (v *Vm) Stop(id string) error {
 
 	return err
 }
-func (v *Vm) Start(id string) error {
+func (v *VmService) Start(id string) error {
 	req, err := v.client.NewRequest("PUT", "/ovm/core/wsapi/rest/Vm/"+id+"/start", nil)
 	if err != nil {
 		return err
