@@ -50,27 +50,28 @@ type VmResponse struct {
 }
 
 type JobResponse struct {
-	Id   Id   `json:"id"`
-	Done bool `json:"done"`
-	/*	ResulitId                    id     `json:"resourceGroupIds"`
+	Id       Id   `json:"id"`
+	Done     bool `json:"done"`
+	ResultId Id   `json:"resultId,omitempty"`
+	/*ResourceGroupIds id   `json:"resourceGroupIds"`
 
-		SummaryDone                  bool   `json:"summaryDone"`
-		JobGroup                     bool   `json:"jobGroup"`
-		JobRunState                  string `json:"jobRunState"`
-		JobSummaryState              string `json:"jobSummaryState"`
-		AbortedByUser                string `json:"abortedByUser"`
-		ExtraInfo                    string `json:"extraInfo"`
-		Name                         string `json:"name"`
-		Description                  string `json:"description"`
-		Locked                       bool   `json:"locked"`
-		ReadOnly                     bool   `json:"readOnly"`
-		Generation                   int    `json:"generation"`
-		ProgressMessage              string `json:"progressMessage"`
-		LatestSummaryProgressMessage string `json:"latestSummaryProgressMessage"`
-		StartTime                    int64  `json:"startTime"`
-		EndTime                      int64  `json:"endTime"`
-		ParentJobId                  id     `json:"parentJobId"`
-		ChildJobIds                  id     `json:"childJobIds"`
-		User                         string `json:"user"`
-		ResourceGroupIds             id     `json:"resourceGroupIds"`*/
+	SummaryDone                  bool   `json:"summaryDone"`
+	JobGroup                     bool   `json:"jobGroup"`
+	JobRunState                  string `json:"jobRunState"`
+	JobSummaryState              string `json:"jobSummaryState"`
+	AbortedByUser                string `json:"abortedByUser"`
+	ExtraInfo                    string `json:"extraInfo"`
+	Name                         string `json:"name"`
+	Description                  string `json:"description"`
+	Locked                       bool   `json:"locked"`
+	ReadOnly                     bool   `json:"readOnly"`
+	Generation                   int    `json:"generation"`
+	ProgressMessage              string `json:"progressMessage"`
+	LatestSummaryProgressMessage string `json:"latestSummaryProgressMessage"`
+	StartTime                    int64  `json:"startTime"`
+	EndTime                      int64  `json:"endTime"`
+	ParentJobId                  id     `json:"parentJobId"`
+	ChildJobIds                  id     `json:"childJobIds"`
+	User                         string `json:"user"`
+	ResourceGroupIds             id     `json:"resourceGroupIds"`*/
 }

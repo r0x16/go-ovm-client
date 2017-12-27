@@ -9,8 +9,8 @@ type Vm struct {
 	CpuCountLimit      int    `json:"cpuCountLimit,omitempty"`
 	CpuPriority        int    `json:"cpuPriority,omitempty"`
 	CpuUtilizationCap  int    `json:"cpuUtilizationCap,omitempty"`
-	HighAvailability   bool   `json:"highAvailability"`
-	HugePagesEnabled   bool   `json:"hugePagesEnabled"`
+	HighAvailability   bool   `json:"highAvailability,omitempty"`
+	HugePagesEnabled   bool   `json:"hugePagesEnabled,omitempty"`
 	KeymapName         string `json:"keymapName,omitempty"`
 	Memory             int    `json:"memory,omitempty"`
 	MemoryLimit        int    `json:"memoryLimit,omitempty"`

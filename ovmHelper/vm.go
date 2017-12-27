@@ -66,24 +66,28 @@ func (v *VmService) Start(id string) error {
 	return err
 }
 
-func (v *VmService) CreateVm(vm Vm) error {
+func (v *VmService) CreateVm(vm Vm) (*string, error) {
 	req, err := v.client.NewRequest("POST", "/ovm/core/wsapi/rest/Vm", nil, vm)
 	if err != nil {
-		return err
+		s := ""
+		return &s, err
 	}
 
-	fmt.Println(req)
+	//fmt.Println(req)
 
 	m := &JobResponse{}
 	_, err = v.client.Do(req, m)
 
 	if err != nil {
-		return err
+		s := ""
+		return &s, err
 	}
 
 	for v.client.Jobs.Running(m.Id.Value) {
 		fmt.Println("true")
 		time.Sleep(5 * time.Second)
 	}
-	return err
+
+	j, _ := v.client.Jobs.Read(m.Id.Value)
+	return &j.ResultId.Value, err
 }
