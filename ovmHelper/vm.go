@@ -134,3 +134,25 @@ func (v *VmService) UpdateVm(vmId string, vm Vm) (*string, error) {
 	j, _ := v.client.Jobs.Read(m.Id.Value)
 	return &j.ResultId.Value, err
 }
+
+func (v *VmService) DeleteVm(vmId string) (*string, error) {
+
+	req, err := v.client.NewRequest("DELETE", "/ovm/core/wsapi/rest/Vm/"+vmId, nil, nil)
+	if err != nil {
+		s := ""
+		return &s, err
+	}
+
+	m := &JobResponse{}
+	_, err = v.client.Do(req, m)
+	if err != nil {
+		s := ""
+		fmt.Println("inside error")
+		return &s, err
+	}
+	for v.client.Jobs.Running(m.Id.Value) {
+		time.Sleep(5 * time.Second)
+	}
+	j, _ := v.client.Jobs.Read(m.Id.Value)
+	return &j.ResultId.Value, err
+}
