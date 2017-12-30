@@ -9,13 +9,13 @@ type VmService struct {
 	client *Client
 }
 
-func (v *VmService) Read(id string) (*VmResponse, error) {
+func (v *VmService) Read(id string) (*Vm, error) {
 	req, err := v.client.NewRequest("GET", "/ovm/core/wsapi/rest/Vm/"+id, nil, nil)
 	if err != nil {
 		return nil, err
 	}
 
-	m := &VmResponse{}
+	m := &Vm{}
 	_, err = v.client.Do(req, m)
 
 	if err != nil {
@@ -73,7 +73,7 @@ func (v *VmService) CreateVm(vm Vm) (*string, error) {
 		return &s, err
 	}
 
-	//fmt.Println(req)
+	fmt.Println(req)
 
 	m := &JobResponse{}
 	_, err = v.client.Do(req, m)
@@ -88,6 +88,49 @@ func (v *VmService) CreateVm(vm Vm) (*string, error) {
 		time.Sleep(5 * time.Second)
 	}
 
+	j, _ := v.client.Jobs.Read(m.Id.Value)
+	return &j.ResultId.Value, err
+}
+
+func (v *VmService) UpdateVm(vmId string, vm Vm) (*string, error) {
+	p := make(map[string]string)
+
+	p["vmId"] = vmId
+	rVm, _ := v.client.Vms.Read(vmId)
+	if rVm.CpuCount != vm.CpuCount {
+		rVm.CpuCount = vm.CpuCount
+	}
+	if rVm.CpuCountLimit != vm.CpuCountLimit {
+		rVm.CpuCountLimit = vm.CpuCountLimit
+	}
+	if rVm.Name != vm.Name {
+		rVm.Name = vm.Name
+	}
+	if rVm.VmDomainType != vm.VmDomainType {
+		rVm.VmDomainType = vm.VmDomainType
+	}
+	if rVm.Memory != vm.Memory {
+		rVm.Memory = vm.Memory
+	}
+	if rVm.HugePagesEnabled != vm.HugePagesEnabled {
+		rVm.HugePagesEnabled = vm.HugePagesEnabled
+	}
+	req, err := v.client.NewRequest("PUT", "/ovm/core/wsapi/rest/Vm/"+vmId, p, rVm)
+	if err != nil {
+		s := ""
+		return &s, err
+	}
+
+	m := &JobResponse{}
+	_, err = v.client.Do(req, m)
+	if err != nil {
+		s := ""
+		fmt.Println("inside error")
+		return &s, err
+	}
+	for v.client.Jobs.Running(m.Id.Value) {
+		time.Sleep(5 * time.Second)
+	}
 	j, _ := v.client.Jobs.Read(m.Id.Value)
 	return &j.ResultId.Value, err
 }

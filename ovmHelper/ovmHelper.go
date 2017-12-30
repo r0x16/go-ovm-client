@@ -33,6 +33,7 @@ func NewClient(user string, password string, baseUrl string) *Client {
 }
 
 func (pc *Client) NewRequest(method string, rsc string, params map[string]string, data interface{}) (*http.Request, error) {
+	fmt.Println("inside NewRewuest func")
 	baseUrl, err := url.Parse(pc.BaseURL.String() + rsc)
 	if err != nil {
 		return nil, err
@@ -41,6 +42,7 @@ func (pc *Client) NewRequest(method string, rsc string, params map[string]string
 	if params != nil {
 		ps := url.Values{}
 		for k, v := range params {
+			fmt.Printf("value: %s \n", v)
 			ps.Set(k, v)
 		}
 		baseUrl.RawQuery = ps.Encode()

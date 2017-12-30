@@ -1,10 +1,10 @@
 package ovmHelper
 
 type Id struct {
-	Type  string `json:"type"`
-	Value string `json:"value"`
-	Uri   string `json:"uri"`
-	Name  string `json:"name"`
+	Type  string `json:"type,omitempty"`
+	Value string `json:"value,omitempty"`
+	Uri   string `json:"uri,omitempty"`
+	Name  string `json:"name,omitempty"`
 }
 
 type VmResponse struct {
@@ -29,19 +29,19 @@ type VmResponse struct {
 	VmMouseType              string `json:"vmMouseType"`
 	VmRunState               string `json:"vmRunState"`
 	VmStartPolicy            string `json:"vmStartPolicy"`
-	SslVncPort               int    `json:""sslVncPort"`
-	SslTtyPort               string `json:""sslTtyPort"`
-	AffinityGroupIds         []int  `json:""affinityGroupIds"`
-	OsVersion                string `json:""osVersion"`
-	KernelVersion            string `json:""kernelVersion"`
-	GuestDriverVersion       string `json:""guestDriverVersion"`
-	VmApiVersion             string `json:""vmApiVersion"`
-	CurrentMemory            int    `json:""currentMemory"`
-	CurrentCpuCount          int    `json:""currentCpuCount"`
-	CurrentDomainId          int    `json:""currentDomainId"`
-	VmConfigFileAbsolutePath string `json:""vmConfigFileAbsolutePath"`
-	VmConfigFileMountedPath  string `json:""vmConfigFileMountedPath"`
-	Architecture             string `json:""architecture"`
+	SslVncPort               int    `json:"sslVncPort"`
+	SslTtyPort               string `json:"sslTtyPort"`
+	AffinityGroupIds         []int  `json:"affinityGroupIds"`
+	OsVersion                string `json:"osVersion"`
+	KernelVersion            string `json:"kernelVersion"`
+	GuestDriverVersion       string `json:"guestDriverVersion"`
+	VmApiVersion             string `json:"vmApiVersion"`
+	CurrentMemory            int    `json:"currentMemory"`
+	CurrentCpuCount          int    `json:"currentCpuCount"`
+	CurrentDomainId          int    `json:"currentDomainId"`
+	VmConfigFileAbsolutePath string `json:"vmConfigFileAbsolutePath"`
+	VmConfigFileMountedPath  string `json:"vmConfigFileMountedPath"`
+	Architecture             string `json:"architecture"`
 	VmDiskMappingIds         []Id   `json:"vmDiskMappingIds"`
 	VirtualNicIds            []Id   `json:"virtualNicIds"`
 	RepositoryId             Id     `json:"repositoryId"`
