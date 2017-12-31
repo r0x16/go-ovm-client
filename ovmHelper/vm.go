@@ -82,11 +82,7 @@ func (v *VmService) CreateVm(vm Vm) (*string, error) {
 		s := ""
 		return &s, err
 	}
-
-	for v.client.Jobs.Running(m.Id.Value) {
-		fmt.Println("true")
-		time.Sleep(5 * time.Second)
-	}
+	v.client.Jobs.WaitForJob(m.Id.Value)
 
 	j, _ := v.client.Jobs.Read(m.Id.Value)
 	return &j.ResultId.Value, err
@@ -128,9 +124,7 @@ func (v *VmService) UpdateVm(vmId string, vm Vm) (*string, error) {
 		fmt.Println("inside error")
 		return &s, err
 	}
-	for v.client.Jobs.Running(m.Id.Value) {
-		time.Sleep(5 * time.Second)
-	}
+	v.client.Jobs.WaitForJob(m.Id.Value)
 	j, _ := v.client.Jobs.Read(m.Id.Value)
 	return &j.ResultId.Value, err
 }
@@ -150,9 +144,8 @@ func (v *VmService) DeleteVm(vmId string) (*string, error) {
 		fmt.Println("inside error")
 		return &s, err
 	}
-	for v.client.Jobs.Running(m.Id.Value) {
-		time.Sleep(5 * time.Second)
-	}
+
+	v.client.Jobs.WaitForJob(m.Id.Value)
 	j, _ := v.client.Jobs.Read(m.Id.Value)
 	return &j.ResultId.Value, err
 }

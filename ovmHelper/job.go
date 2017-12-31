@@ -1,5 +1,9 @@
 package ovmHelper
 
+import (
+	"time"
+)
+
 type JobService struct {
 	client *Client
 }
@@ -29,4 +33,11 @@ func (j *JobService) Running(id string) bool {
 		return false
 	}
 
+}
+
+func (j *JobService) WaitForJob(id string) {
+
+	for j.Running(id) {
+		time.Sleep(5 * time.Second)
+	}
 }
