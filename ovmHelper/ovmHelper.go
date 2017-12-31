@@ -16,6 +16,7 @@ type Client struct {
 	BaseURL  *url.URL
 	client   *http.Client
 	Vms      *VmService
+	Vds      *VdService
 	Jobs     *JobService
 }
 
@@ -25,9 +26,9 @@ func NewClient(user string, password string, baseUrl string) *Client {
 		TLSClientConfig: &tls.Config{InsecureSkipVerify: true},
 	}
 	c := &Client{User: user, Password: password, BaseURL: baseURL}
-	//c.client = http.DefaultClient{Transport: tr}
 	c.client = &http.Client{Transport: tr}
 	c.Vms = &VmService{client: c}
+	c.Vds = &VdService{client: c}
 	c.Jobs = &JobService{client: c}
 	return c
 }
