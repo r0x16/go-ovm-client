@@ -63,13 +63,14 @@ func (pc *Client) NewRequest(method string, rsc string, params map[string]string
 func (pc *Client) Do(req *http.Request, v interface{}) (*http.Response, error) {
 	resp, err := pc.client.Do(req)
 	if err != nil {
+		fmt.Println("Do request failed")
 		return nil, err
 	}
 	defer resp.Body.Close()
 
-	//	body, err := ioutil.ReadAll(resp.Body)
-
-	//	fmt.Println(string(body))
+	//body, err := ioutil.ReadAll(resp.Body)
+	fmt.Printf("status: %s \n", resp.Status)
+	//fmt.Println(string(body))
 
 	/*if err := validateResponse(resp); err != nil {
 		return resp, err
@@ -90,5 +91,6 @@ func decodeResponse(r *http.Response, v interface{}) error {
 	bodyBytes, _ := ioutil.ReadAll(r.Body)
 	bodyString := string(bodyBytes)
 	err := json.Unmarshal([]byte(bodyString), &v)
+	//err := json.Unmarshal([]byte(bodyBytes), &v)
 	return err
 }

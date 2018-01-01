@@ -2,7 +2,7 @@ package ovmHelper
 
 type Vd struct {
 	DiskType              string `json:"diskType,omitempty"` // "VIRTUAL_DISK",
-	Size                  int    `json:"size,omitempty"`
+	Size                  int    `json:"size,omitempty"`     //Bytes multiple of 4096
 	OnDiskSize            int    `json:"onDiskSize,omitempty"`
 	Path                  string `json:"path,omitempty"`
 	VmDiskMappingIds      []*Id  `json:"vmDiskMappingIds,omitempty"`
