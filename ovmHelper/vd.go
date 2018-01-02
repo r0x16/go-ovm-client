@@ -85,11 +85,11 @@ func (v *VdService) Update(vdId string, vd Vd) error {
 	return err
 }
 
-func (v *VdService) Delete(repositoryId string, vd Vd) error {
+func (v *VdService) Delete(repositoryId string, vdId string) error {
 	params := make(map[string]string)
 	params["repositoryId"] = repositoryId
-	params["virtualDiskId"] = vd.Id.Value
-	url := fmt.Sprintf("/ovm/core/wsapi/rest/Repository/%s/VirtualDisk/%s", repositoryId, vd.Id.Value)
+	params["virtualDiskId"] = vdId
+	url := fmt.Sprintf("/ovm/core/wsapi/rest/Repository/%s/VirtualDisk/%s", repositoryId, vdId)
 	req, err := v.client.NewRequest("DELETE", url, params, nil)
 	if err != nil {
 		fmt.Println("error")

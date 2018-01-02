@@ -17,6 +17,7 @@ type Client struct {
 	client   *http.Client
 	Vms      *VmService
 	Vds      *VdService
+	Vdms     *VdmService
 	Jobs     *JobService
 }
 
@@ -29,6 +30,7 @@ func NewClient(user string, password string, baseUrl string) *Client {
 	c.client = &http.Client{Transport: tr}
 	c.Vms = &VmService{client: c}
 	c.Vds = &VdService{client: c}
+	c.Vdms = &VdmService{client: c}
 	c.Jobs = &JobService{client: c}
 	return c
 }
