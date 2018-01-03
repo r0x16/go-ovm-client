@@ -63,9 +63,9 @@ func (v *VdmService) Create(vdm Vdm) (*string, error) {
 	return &j.ResultId.Value, nil
 }
 
-func (v *VdmService) Delete(vdm Vdm) error {
+func (v *VdmService) Delete(vmId string, vdmId string) error {
 
-	url := fmt.Sprintf("/ovm/core/wsapi/rest/Vm/%s/VmDiskMapping/%s", vdm.VmId.Value, vdm.Id.Value)
+	url := fmt.Sprintf("/ovm/core/wsapi/rest/Vm/%s/VmDiskMapping/%s", vmId, vdmId)
 	req, err := v.client.NewRequest("DELETE", url, nil, nil)
 	if err != nil {
 		fmt.Println("error")
