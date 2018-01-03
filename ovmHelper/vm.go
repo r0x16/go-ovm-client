@@ -1,7 +1,9 @@
 package ovmHelper
 
 import (
+	"encoding/json"
 	"fmt"
+	"log"
 	"time"
 )
 
@@ -88,7 +90,44 @@ func (v *VmService) CreateVm(vm Vm) (*string, error) {
 	return &j.ResultId.Value, err
 }
 
-func (v *VmService) UpdateVm(vmId string, vm Vm) (*string, error) {
+func (v *VmService) CloneVm(cloneVmId string, vm Vm) (*string, error) {
+
+	params := make(map[string]string)
+	params["vmId"] = cloneVmId
+	params["serverPoolId"] = vm.ServerPoolId.Value
+
+	url := fmt.Sprintf("/ovm/core/wsapi/rest/Vm/%s/clone", cloneVmId)
+	req, err := v.client.NewRequest("PUT", url, params, nil)
+	if err != nil {
+		return nil, err
+	}
+
+	m := &JobResponse{}
+
+	_, err = v.client.Do(req, m)
+	if err != nil {
+		fmt.Println(err)
+		return nil, err
+	}
+
+	v.client.Jobs.WaitForJob(m.Id.Value)
+	j, _ := v.client.Jobs.Read(m.Id.Value)
+	if err != nil {
+		return nil, err
+	}
+
+	jsonJobResult, _ := json.Marshal(j)
+	log.Printf("[DEBUG] %v", string(jsonJobResult))
+	vm.Id = &Id{Value: j.ResultId.Value,
+		Type: "com.oracle.ovm.mgr.ws.model.Vm"}
+
+	log.Printf("[INFO] Update vmId: %s", j.ResultId.Value)
+	err = v.client.Vms.UpdateVm(j.ResultId.Value, vm)
+
+	return &j.ResultId.Value, err
+}
+
+func (v *VmService) UpdateVm(vmId string, vm Vm) error {
 	p := make(map[string]string)
 
 	p["vmId"] = vmId
@@ -113,20 +152,21 @@ func (v *VmService) UpdateVm(vmId string, vm Vm) (*string, error) {
 	}
 	req, err := v.client.NewRequest("PUT", "/ovm/core/wsapi/rest/Vm/"+vmId, p, rVm)
 	if err != nil {
-		s := ""
-		return &s, err
+		return err
 	}
 
 	m := &JobResponse{}
 	_, err = v.client.Do(req, m)
 	if err != nil {
-		s := ""
 		fmt.Println("inside error")
-		return &s, err
+		return err
 	}
 	v.client.Jobs.WaitForJob(m.Id.Value)
 	j, _ := v.client.Jobs.Read(m.Id.Value)
-	return &j.ResultId.Value, err
+
+	jobJson, _ := json.Marshal(j)
+	log.Printf("[DEBUG] %v", string(jobJson))
+	return err
 }
 
 func (v *VmService) DeleteVm(vmId string) error {
