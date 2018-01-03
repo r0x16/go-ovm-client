@@ -2,6 +2,7 @@ package ovmHelper
 
 import (
 	"fmt"
+	"log"
 )
 
 type VdmService struct {
@@ -17,11 +18,13 @@ func (v *VdmService) Read(vmId string, vdmId string) (*Vdm, error) {
 
 	for _, v := range *listOfVdm {
 		if vdmId == v.Id.Value {
+			log.Printf("[DEBUG] Find VDM id: %v", vdmId)
 			return &v, nil
 		}
 	}
 
-	return nil, fmt.Errorf("Did not find vmDiskMapping")
+	log.Printf("[DEBUG] Read VDM found no mapping")
+	return nil, nil
 
 }
 func (v *VdmService) List(vmId string) (*[]Vdm, error) {
@@ -48,10 +51,11 @@ func (v *VdmService) Create(vdm Vdm) (*string, error) {
 		fmt.Println("error")
 		return nil, err
 	}
-
+	log.Printf("[DEBUG] %v", req)
 	m := &JobResponse{}
+	//m := JobResponse{}
 
-	_, err = v.client.Do(req, m)
+	_, err = v.client.Do(req, &m)
 	if err != nil {
 		fmt.Println(err)
 		return nil, err

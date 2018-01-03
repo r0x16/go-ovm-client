@@ -6,6 +6,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"io/ioutil"
+	"log"
 	"net/http"
 	"net/url"
 )
@@ -72,6 +73,7 @@ func (pc *Client) Do(req *http.Request, v interface{}) (*http.Response, error) {
 
 	//body, err := ioutil.ReadAll(resp.Body)
 	fmt.Printf("status: %s \n", resp.Status)
+	log.Printf("Response code: %v", resp.Status)
 	//fmt.Println(string(body))
 
 	/*if err := validateResponse(resp); err != nil {

@@ -2,6 +2,7 @@ package ovmHelper
 
 import (
 	"fmt"
+	"log"
 	"strconv"
 )
 
@@ -35,6 +36,8 @@ func (v *VdService) Create(repositoryId string, sparse bool, vd Vd) (*string, er
 		fmt.Println("error")
 		return nil, err
 	}
+
+	log.Printf("[DEBUG] %v", req)
 
 	m := &JobResponse{}
 
