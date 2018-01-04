@@ -1,5 +1,7 @@
 package ovmHelper
 
+import "fmt"
+
 type Id struct {
 	Type  string `json:"type,omitempty"`
 	Value string `json:"value,omitempty"`
@@ -72,4 +74,18 @@ type JobResponse struct {
 	ParentJobId                  *Id    `json:"parentJobId,omitempty"`
 	ChildJobIds                  *[]Id  `json:"childJobIds,omitempty"`
 	User                         string `json:"user,omitempty"`
+}
+
+type OvmHelperError struct {
+	StatusCode int    `json:"statuscode"`
+	StatusDesc string `json:"statusdesc"`
+	Message    string `json:"errormessage"`
+}
+
+func (r *OvmHelperError) Error() string {
+	return fmt.Sprintf("%d %v: %v", r.StatusCode, r.StatusDesc, r.Message)
+}
+
+type errorJsonResponse struct {
+	Error *OvmHelperError `json:"error"`
 }

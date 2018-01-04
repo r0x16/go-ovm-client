@@ -17,6 +17,8 @@ type Client struct {
 	BaseURL  *url.URL
 	client   *http.Client
 	Vms      *VmService
+	Vmcds    *VmcdService
+	Vmcnms   *VmcnmService
 	Vds      *VdService
 	Vdms     *VdmService
 	Jobs     *JobService
@@ -30,6 +32,8 @@ func NewClient(user string, password string, baseUrl string) *Client {
 	c := &Client{User: user, Password: password, BaseURL: baseURL}
 	c.client = &http.Client{Transport: tr}
 	c.Vms = &VmService{client: c}
+	c.Vmcds = &VmcdService{client: c}
+	c.Vmcnms = &VmcnmService{client: c}
 	c.Vds = &VdService{client: c}
 	c.Vdms = &VdmService{client: c}
 	c.Jobs = &JobService{client: c}
@@ -37,7 +41,7 @@ func NewClient(user string, password string, baseUrl string) *Client {
 }
 
 func (pc *Client) NewRequest(method string, rsc string, params map[string]string, data interface{}) (*http.Request, error) {
-	fmt.Println("inside NewRewuest func")
+
 	baseUrl, err := url.Parse(pc.BaseURL.String() + rsc)
 	if err != nil {
 		return nil, err
@@ -46,7 +50,7 @@ func (pc *Client) NewRequest(method string, rsc string, params map[string]string
 	if params != nil {
 		ps := url.Values{}
 		for k, v := range params {
-			fmt.Printf("value: %s \n", v)
+			log.Printf("[DEBUG] key: %s, value: %s \n", v, k)
 			ps.Set(k, v)
 		}
 		baseUrl.RawQuery = ps.Encode()
@@ -72,16 +76,13 @@ func (pc *Client) Do(req *http.Request, v interface{}) (*http.Response, error) {
 	defer resp.Body.Close()
 
 	//body, err := ioutil.ReadAll(resp.Body)
-	fmt.Printf("status: %s \n", resp.Status)
-	log.Printf("Response code: %v", resp.Status)
+	log.Printf("[Info] Response code: %v", resp.Status)
 	//fmt.Println(string(body))
 
-	/*if err := validateResponse(resp); err != nil {
+	if err := validateResponse(resp); err != nil {
 		return resp, err
 	}
 
-
-	*/
 	err = decodeResponse(resp, v)
 	return resp, err
 
@@ -97,4 +98,23 @@ func decodeResponse(r *http.Response, v interface{}) error {
 	err := json.Unmarshal([]byte(bodyString), &v)
 	//err := json.Unmarshal([]byte(bodyBytes), &v)
 	return err
+}
+
+// Takes an HTTP response and determines whether it was successful.
+// Returns nil if the HTTP status code is within the 2xx range.  Returns
+// an error otherwise.
+func validateResponse(r *http.Response) error {
+	if c := r.StatusCode; 200 <= c && c <= 299 {
+		return nil
+	}
+
+	bodyBytes, _ := ioutil.ReadAll(r.Body)
+	bodyString := string(bodyBytes)
+	m := &errorJsonResponse{}
+	err := json.Unmarshal([]byte(bodyString), &m)
+	if err != nil {
+		return err
+	}
+
+	return m.Error
 }
