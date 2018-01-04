@@ -18,6 +18,7 @@ type Client struct {
 	client   *http.Client
 	Vms      *VmService
 	Vmcds    *VmcdService
+	Vmcsms   *VmcsmService
 	Vmcnms   *VmcnmService
 	Vds      *VdService
 	Vdms     *VdmService
@@ -33,6 +34,7 @@ func NewClient(user string, password string, baseUrl string) *Client {
 	c.client = &http.Client{Transport: tr}
 	c.Vms = &VmService{client: c}
 	c.Vmcds = &VmcdService{client: c}
+	c.Vmcsms = &VmcsmService{client: c}
 	c.Vmcnms = &VmcnmService{client: c}
 	c.Vds = &VdService{client: c}
 	c.Vdms = &VdmService{client: c}
