@@ -62,7 +62,6 @@ func (v *VmService) Start(id string) error {
 	}
 
 	for v.client.Jobs.Running(m.Id.Value) {
-		fmt.Println("true")
 		time.Sleep(5 * time.Second)
 	}
 	return err
@@ -90,11 +89,15 @@ func (v *VmService) CreateVm(vm Vm) (*string, error) {
 	return &j.ResultId.Value, err
 }
 
-func (v *VmService) CloneVm(cloneVmId string, vm Vm) (*string, error) {
+func (v *VmService) CloneVm(cloneVmId string, vmCloneDefinitionId string, vm Vm) (*string, error) {
 
 	params := make(map[string]string)
 	params["vmId"] = cloneVmId
 	params["serverPoolId"] = vm.ServerPoolId.Value
+	params["repositoryId"] = vm.RepositoryId.Value
+	if vmCloneDefinitionId != "" {
+		params["vmCloneDefinitionId"] = vmCloneDefinitionId
+	}
 
 	url := fmt.Sprintf("/ovm/core/wsapi/rest/Vm/%s/clone", cloneVmId)
 	req, err := v.client.NewRequest("PUT", url, params, nil)
