@@ -67,14 +67,14 @@ func (v *VmService) Start(id string) error {
 	return err
 }
 
-func (v *VmService) CreateVm(vm Vm) (*string, error) {
+func (v *VmService) CreateVm(vm Vm, cfgVm CfgVm) (*string, error) {
 	req, err := v.client.NewRequest("POST", "/ovm/core/wsapi/rest/Vm", nil, vm)
 	if err != nil {
 		s := ""
 		return &s, err
 	}
 
-	fmt.Println(req)
+	log.Printf("[DEBUG] vmrequest: %v", req)
 
 	m := &JobResponse{}
 	_, err = v.client.Do(req, m)
@@ -86,6 +86,19 @@ func (v *VmService) CreateVm(vm Vm) (*string, error) {
 	v.client.Jobs.WaitForJob(m.Id.Value)
 
 	j, _ := v.client.Jobs.Read(m.Id.Value)
+	if cfgVm.NetworkId != "" {
+		vn := Vn{NetworkId: &Id{Type: "com.oracle.ovm.mgr.ws.model.Network",
+			Value: cfgVm.NetworkId},
+			VmId: &Id{Type: "com.oracle.ovm.mgr.ws.model.Vm",
+				Value: j.ResultId.Value,
+			},
+		}
+		_, err = v.client.Vns.Create(j.ResultId.Value, vn)
+		if err != nil {
+			return &j.ResultId.Value, err
+		}
+	}
+
 	return &j.ResultId.Value, err
 }
 

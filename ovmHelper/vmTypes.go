@@ -40,3 +40,7 @@ type Vm struct {
 	ServerId                 *Id    `json:"serverId,omitempty"`
 	Generation               int    `json:"generation,omitempty"`
 }
+
+type CfgVm struct {
+	NetworkId string
+}
