@@ -77,9 +77,10 @@ type JobResponse struct {
 }
 
 type OvmHelperError struct {
-	StatusCode int    `json:"statuscode"`
-	StatusDesc string `json:"statusdesc"`
-	Message    string `json:"errormessage"`
+	StatusCode  int    `json:"statuscode,omitempty"`
+	StatusDesc  string `json:"statusdesc,omitempty"` //Remove ?
+	Message     string `json:"message,omitempty"`
+	WsErrorCode string `json:"wsErrorCode,omitempty"`
 }
 
 func (r *OvmHelperError) Error() string {

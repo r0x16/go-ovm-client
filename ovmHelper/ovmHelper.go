@@ -20,6 +20,7 @@ type Client struct {
 	Vmcds    *VmcdService
 	Vmcsms   *VmcsmService
 	Vmcnms   *VmcnmService
+	Vns      *VnService
 	Vds      *VdService
 	Vdms     *VdmService
 	Jobs     *JobService
@@ -38,6 +39,7 @@ func NewClient(user string, password string, baseUrl string) *Client {
 	c.Vmcnms = &VmcnmService{client: c}
 	c.Vds = &VdService{client: c}
 	c.Vdms = &VdmService{client: c}
+	c.Vns = &VnService{client: c}
 	c.Jobs = &JobService{client: c}
 	return c
 }
@@ -112,8 +114,13 @@ func validateResponse(r *http.Response) error {
 
 	bodyBytes, _ := ioutil.ReadAll(r.Body)
 	bodyString := string(bodyBytes)
+	//	log.Printf("[INFO] bodystring: %v", bodyString)
 	m := &errorJsonResponse{}
-	err := json.Unmarshal([]byte(bodyString), &m)
+	//	b := &errorJsonResponse{}
+	//	b.Error.
+	//m := &OvmHelperError{}
+	err := json.Unmarshal([]byte(bodyString), &m.Error)
+	//	log.Printf("[INFO] err: %v", err.Error())
 	if err != nil {
 		return err
 	}
