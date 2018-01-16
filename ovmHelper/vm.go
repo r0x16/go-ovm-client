@@ -70,22 +70,23 @@ func (v *VmService) Start(id string) error {
 func (v *VmService) CreateVm(vm Vm, cfgVm CfgVm) (*string, error) {
 	req, err := v.client.NewRequest("POST", "/ovm/core/wsapi/rest/Vm", nil, vm)
 	if err != nil {
-		s := ""
-		return &s, err
+		return nil, err
 	}
 
 	log.Printf("[DEBUG] vmrequest: %v", req)
 
 	m := &JobResponse{}
 	_, err = v.client.Do(req, m)
-
 	if err != nil {
-		s := ""
-		return &s, err
+		return nil, err
 	}
 	v.client.Jobs.WaitForJob(m.Id.Value)
 
 	j, _ := v.client.Jobs.Read(m.Id.Value)
+	if !j.succeed() {
+		return nil, j.Error
+	}
+
 	if cfgVm.NetworkId != "" {
 		vn := Vn{NetworkId: &Id{Type: "com.oracle.ovm.mgr.ws.model.Network",
 			Value: cfgVm.NetworkId},
@@ -119,7 +120,6 @@ func (v *VmService) CloneVm(cloneVmId string, vmCloneDefinitionId string, vm Vm)
 	}
 
 	m := &JobResponse{}
-
 	_, err = v.client.Do(req, m)
 	if err != nil {
 		fmt.Println(err)

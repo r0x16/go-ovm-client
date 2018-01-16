@@ -42,7 +42,9 @@ func (v *VmcnmService) Create(vmCloneDefinitionId string, vmcnm Vmcnm) (*string,
 
 	v.client.Jobs.WaitForJob(m.Id.Value)
 	j, _ := v.client.Jobs.Read(m.Id.Value)
-
+	if !j.succeed() {
+		return nil, j.Error
+	}
 	log.Printf("[DEBUG] %v", j)
 	return &j.ResultId.Value, err
 }
@@ -64,6 +66,9 @@ func (v *VmcnmService) Delete(vmCloneDefinitionId string, vmcnmId string) error 
 	}
 
 	v.client.Jobs.WaitForJob(m.Id.Value)
-
+	j, _ := v.client.Jobs.Read(m.Id.Value)
+	if !j.succeed() {
+		return j.Error
+	}
 	return nil
 }

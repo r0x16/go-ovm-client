@@ -80,8 +80,10 @@ func (pc *Client) Do(req *http.Request, v interface{}) (*http.Response, error) {
 	defer resp.Body.Close()
 
 	//body, err := ioutil.ReadAll(resp.Body)
-	log.Printf("[Info] Response code: %v", resp.Status)
+	//log.Printf("[ERROR] Response code: %v", resp.Status)
 	//fmt.Println(string(body))
+
+	log.Printf("[INFO] Response code: %v", resp.Status)
 
 	if err := validateResponse(resp); err != nil {
 		return resp, err
@@ -114,16 +116,5 @@ func validateResponse(r *http.Response) error {
 
 	bodyBytes, _ := ioutil.ReadAll(r.Body)
 	bodyString := string(bodyBytes)
-	//	log.Printf("[INFO] bodystring: %v", bodyString)
-	m := &errorJsonResponse{}
-	//	b := &errorJsonResponse{}
-	//	b.Error.
-	//m := &OvmHelperError{}
-	err := json.Unmarshal([]byte(bodyString), &m.Error)
-	//	log.Printf("[INFO] err: %v", err.Error())
-	if err != nil {
-		return err
-	}
-
-	return m.Error
+	return fmt.Errorf("Response code: %d, ResponeBody: %s", r.StatusCode, bodyString)
 }

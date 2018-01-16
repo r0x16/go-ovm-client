@@ -42,7 +42,9 @@ func (v *VmcdService) Create(VmId string, vmcd Vmcd) (*string, error) {
 
 	v.client.Jobs.WaitForJob(m.Id.Value)
 	j, _ := v.client.Jobs.Read(m.Id.Value)
-
+	if !j.succeed() {
+		return nil, j.Error
+	}
 	return &j.ResultId.Value, err
 }
 
@@ -62,6 +64,9 @@ func (v *VmcdService) Delete(vmId string, vmCloneDefinitionId string) error {
 	}
 
 	v.client.Jobs.WaitForJob(m.Id.Value)
-
+	j, _ := v.client.Jobs.Read(m.Id.Value)
+	if !j.succeed() {
+		return j.Error
+	}
 	return nil
 }

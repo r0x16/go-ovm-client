@@ -45,7 +45,9 @@ func (v *VnService) Create(vmId string, vn Vn) (*string, error) {
 
 	v.client.Jobs.WaitForJob(m.Id.Value)
 	j, _ := v.client.Jobs.Read(m.Id.Value)
-
+	if !j.succeed() {
+		return nil, j.Error
+	}
 	return &j.ResultId.Value, err
 }
 
@@ -66,6 +68,9 @@ func (v *VnService) Delete(vnId string, vn Vn) error {
 	}
 
 	v.client.Jobs.WaitForJob(m.Id.Value)
-
+	j, _ := v.client.Jobs.Read(m.Id.Value)
+	if !j.succeed() {
+		return j.Error
+	}
 	return err
 }

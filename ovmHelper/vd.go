@@ -49,6 +49,9 @@ func (v *VdService) Create(repositoryId string, sparse bool, vd Vd) (*string, er
 
 	v.client.Jobs.WaitForJob(m.Id.Value)
 	j, _ := v.client.Jobs.Read(m.Id.Value)
+	if !j.succeed() {
+		return nil, j.Error
+	}
 
 	return &j.ResultId.Value, err
 }
@@ -84,7 +87,10 @@ func (v *VdService) Update(vdId string, vd Vd) error {
 	}
 
 	v.client.Jobs.WaitForJob(m.Id.Value)
-
+	j, _ := v.client.Jobs.Read(m.Id.Value)
+	if !j.succeed() {
+		return j.Error
+	}
 	return err
 }
 
@@ -108,6 +114,9 @@ func (v *VdService) Delete(repositoryId string, vdId string) error {
 	}
 
 	v.client.Jobs.WaitForJob(m.Id.Value)
-
+	j, _ := v.client.Jobs.Read(m.Id.Value)
+	if !j.succeed() {
+		return j.Error
+	}
 	return err
 }
