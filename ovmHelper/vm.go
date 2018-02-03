@@ -35,16 +35,15 @@ func (v *VmService) Stop(id string) error {
 
 	m := &JobResponse{}
 	_, err = v.client.Do(req, m)
-
 	if err != nil {
 		return err
 	}
 
-	for v.client.Jobs.Running(m.Id.Value) {
-		fmt.Println("true")
-		time.Sleep(5 * time.Second)
+	v.client.Jobs.WaitForJob(m.Id.Value)
+	j, _ := v.client.Jobs.Read(m.Id.Value)
+	if !j.succeed() {
+		return j.Error
 	}
-
 	return err
 }
 
@@ -60,10 +59,12 @@ func (v *VmService) Start(id string) error {
 	if err != nil {
 		return err
 	}
-
-	for v.client.Jobs.Running(m.Id.Value) {
-		time.Sleep(5 * time.Second)
+	v.client.Jobs.WaitForJob(m.Id.Value)
+	j, _ := v.client.Jobs.Read(m.Id.Value)
+	if !j.succeed() {
+		return j.Error
 	}
+
 	return err
 }
 
@@ -98,12 +99,15 @@ func (v *VmService) CreateVm(vm Vm, cfgVm CfgVm) (*string, error) {
 		if err != nil {
 			return &j.ResultId.Value, err
 		}
+
+		log.Printf("[DEBUG] cfgvm: %s", cfgVm)
+
 	}
 
 	return &j.ResultId.Value, err
 }
 
-func (v *VmService) CloneVm(cloneVmId string, vmCloneDefinitionId string, vm Vm) (*string, error) {
+func (v *VmService) CloneVm(cloneVmId string, vmCloneDefinitionId string, vm Vm, cfgVm CfgVm) (*string, error) {
 
 	params := make(map[string]string)
 	params["vmId"] = cloneVmId
@@ -139,7 +143,24 @@ func (v *VmService) CloneVm(cloneVmId string, vmCloneDefinitionId string, vm Vm)
 
 	log.Printf("[INFO] Update vmId: %s", j.ResultId.Value)
 	err = v.client.Vms.UpdateVm(j.ResultId.Value, vm)
+	if err != nil {
+		return nil, err
+	}
 
+	err = v.client.Vms.Start(j.ResultId.Value)
+	if err != nil {
+		return nil, err
+	}
+
+	err = v.client.Vms.SendMessageToVm(j.ResultId.Value, cfgVm)
+	if err != nil {
+		fmt.Println(err)
+	}
+
+	err = v.client.Vms.SendRootPasswordToVm(j.ResultId.Value, cfgVm)
+	if err != nil {
+		fmt.Println(err)
+	}
 	return &j.ResultId.Value, err
 }
 
@@ -200,6 +221,54 @@ func (v *VmService) DeleteVm(vmId string) error {
 	}
 
 	v.client.Jobs.WaitForJob(m.Id.Value)
-	//j, _ := v.client.Jobs.Read(m.Id.Value)
+	j, _ := v.client.Jobs.Read(m.Id.Value)
+	if !j.succeed() {
+		return j.Error
+	}
+
+	return err
+}
+
+func (v *VmService) SendMessageToVm(vmId string, cfgVm CfgVm) error {
+	time.Sleep(30 * time.Second)
+	url := fmt.Sprintf("/ovm/core/wsapi/rest/Vm/%s/sendMessage", vmId)
+	req, err := v.client.NewRequest("PUT", url, nil, cfgVm.SendMessages)
+	if err != nil {
+		return err
+	}
+
+	m := &JobResponse{}
+	_, err = v.client.Do(req, m)
+	if err != nil {
+		return err
+	}
+	v.client.Jobs.WaitForJob(m.Id.Value)
+
+	j, _ := v.client.Jobs.Read(m.Id.Value)
+	if !j.succeed() {
+		return j.Error
+	}
+	return err
+}
+
+func (v *VmService) SendRootPasswordToVm(vmId string, cfgVm CfgVm) error {
+	time.Sleep(5 * time.Second)
+	url := fmt.Sprintf("/ovm/core/wsapi/rest/Vm/%s/sendMessage", vmId)
+	req, err := v.client.NewRequest("PUT", url, nil, cfgVm.RootPassword)
+	if err != nil {
+		return err
+	}
+
+	m := &JobResponse{}
+	_, err = v.client.Do(req, m)
+	if err != nil {
+		return err
+	}
+	v.client.Jobs.WaitForJob(m.Id.Value)
+
+	j, _ := v.client.Jobs.Read(m.Id.Value)
+	if !j.succeed() {
+		return j.Error
+	}
 	return err
 }

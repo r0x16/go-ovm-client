@@ -42,5 +42,12 @@ type Vm struct {
 }
 
 type CfgVm struct {
-	NetworkId string
+	NetworkId    string
+	SendMessages *[]KeyValuePair
+	RootPassword *[]KeyValuePair
+}
+
+type KeyValuePair struct {
+	Key   string `json:"key"`
+	Value string `json:"value"`
 }
