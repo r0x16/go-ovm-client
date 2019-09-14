@@ -29,7 +29,10 @@ type Client struct {
 func NewClient(user string, password string, baseUrl string) *Client {
 	baseURL, _ := url.Parse(baseUrl)
 	tr := &http.Transport{
-		TLSClientConfig: &tls.Config{InsecureSkipVerify: true},
+		TLSClientConfig: &tls.Config{
+			InsecureSkipVerify: true,
+			MinVersion:         tls.VersionTLS10,
+		},
 	}
 	c := &Client{User: user, Password: password, BaseURL: baseURL}
 	c.client = &http.Client{Transport: tr}
