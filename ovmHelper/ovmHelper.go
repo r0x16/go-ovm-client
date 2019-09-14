@@ -32,6 +32,7 @@ func NewClient(user string, password string, baseUrl string) *Client {
 		TLSClientConfig: &tls.Config{
 			InsecureSkipVerify: true,
 			MinVersion:         tls.VersionTLS10,
+			MaxVersion:         tls.VersionTLS10,
 		},
 	}
 	c := &Client{User: user, Password: password, BaseURL: baseURL}
