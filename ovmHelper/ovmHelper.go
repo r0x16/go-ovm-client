@@ -116,5 +116,5 @@ func validateResponse(r *http.Response) error {
 
 	bodyBytes, _ := ioutil.ReadAll(r.Body)
 	bodyString := string(bodyBytes)
-	return fmt.Errorf("Response code: %d, ResponeBody: %s", r.StatusCode, bodyString)
+	return fmt.Errorf("error: Response code: %d, ResponeBody: %s", r.StatusCode, bodyString)
 }
