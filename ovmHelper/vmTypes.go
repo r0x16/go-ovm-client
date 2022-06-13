@@ -20,7 +20,7 @@ type Vm struct {
 	VmMouseType              string `json:"vmMouseType,omitempty"`
 	VmRunState               string `json:"vmRunState,omitempty"`
 	VmStartPolicy            string `json:"vmStartPolicy,omitempty"`
-	SslVncPort               int    `json:"sslVncPort,omitempty"`
+	SslVncPort               string `json:"sslVncPort,omitempty"`
 	SslTtyPort               string `json:"sslTtyPort,omitempty"`
 	AffinityGroupIds         []int  `json:"affinityGroupIds,omitempty"`
 	OsVersion                string `json:"osVersion,omitempty"`
