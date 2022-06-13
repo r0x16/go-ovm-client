@@ -11,6 +11,38 @@ type VmService struct {
 	client *Client
 }
 
+func (v *VmService) ReadAllIds() ([]*Id, error) {
+	req, err := v.client.NewRequest("GET", "/ovm/core/wsapi/rest/Vm/id", nil, nil)
+	if err != nil {
+		return nil, err
+	}
+
+	var m []*Id
+	_, err = v.client.Do(req, &m)
+
+	if err != nil {
+		return nil, err
+	}
+
+	return m, err
+}
+
+func (v *VmService) ReadAll() ([]*Vm, error) {
+	req, err := v.client.NewRequest("GET", "/ovm/core/wsapi/rest/Vm", nil, nil)
+	if err != nil {
+		return nil, err
+	}
+
+	var m []*Vm
+	_, err = v.client.Do(req, &m)
+
+	if err != nil {
+		return nil, err
+	}
+
+	return m, err
+}
+
 func (v *VmService) Read(id string) (*Vm, error) {
 	req, err := v.client.NewRequest("GET", "/ovm/core/wsapi/rest/Vm/"+id, nil, nil)
 	if err != nil {
