@@ -25,6 +25,7 @@ type Client struct {
 	Vdms     *VdmService
 	Jobs     *JobService
 	Ses      *SeService
+	Managers *ManagerService
 }
 
 func NewClient(user string, password string, baseUrl string) *Client {
@@ -43,6 +44,7 @@ func NewClient(user string, password string, baseUrl string) *Client {
 	c.Vns = &VnService{client: c}
 	c.Jobs = &JobService{client: c}
 	c.Ses = &SeService{client: c}
+	c.Managers = &ManagerService{client: c}
 	return c
 }
 
