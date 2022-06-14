@@ -83,7 +83,7 @@ func (se *SeService) UpdateSe(seId string, element Se) error {
 	return err
 }
 
-func (se *SeService) RefreshSe(seId string) error {
+func (se *SeService) Refresh(seId string) error {
 	req, err := se.client.NewRequest("PUT", "/ovm/core/wsapi/rest/StorageElement/"+seId+"/refresh", nil, nil)
 	if err != nil {
 		return err
