@@ -12,20 +12,24 @@ import (
 )
 
 type Client struct {
-	User     string
-	Password string
-	BaseURL  *url.URL
-	client   *http.Client
-	Vms      *VmService
-	Vmcds    *VmcdService
-	Vmcsms   *VmcsmService
-	Vmcnms   *VmcnmService
-	Vns      *VnService
-	Vds      *VdService
-	Vdms     *VdmService
-	Jobs     *JobService
-	Ses      *SeService
-	Managers *ManagerService
+	User         string
+	Password     string
+	BaseURL      *url.URL
+	client       *http.Client
+	Vms          *VmService
+	Vmcds        *VmcdService
+	Vmcsms       *VmcsmService
+	Vmcnms       *VmcnmService
+	Vns          *VnService
+	Vds          *VdService
+	Vdms         *VdmService
+	Jobs         *JobService
+	Ses          *SeService
+	Managers     *ManagerService
+	Repositories *RepositoryService
+	Sas          *SaService
+	Fss          *FsService
+	Servers      *ServerService
 }
 
 func NewClient(user string, password string, baseUrl string) *Client {
@@ -45,6 +49,11 @@ func NewClient(user string, password string, baseUrl string) *Client {
 	c.Jobs = &JobService{client: c}
 	c.Ses = &SeService{client: c}
 	c.Managers = &ManagerService{client: c}
+	c.Repositories = &RepositoryService{client: c}
+	c.Sas = &SaService{client: c}
+	c.Fss = &FsService{client: c}
+	c.Servers = &ServerService{client: c}
+
 	return c
 }
 
