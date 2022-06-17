@@ -5,7 +5,7 @@ package ovmHelper
 type Vdm struct {
 	VmId                *Id    `json:"vmId,omitempty"`
 	VirtualDiskId       *Id    `json:"virtualDiskId,omitempty"`
-	DiskTarget          int    `json:"diskTarget"`
+	DiskTarget          int    `json:"diskTarget,omitempty"`
 	EmulatedBlockDevice bool   `json:"emulatedBlockDevice,omitempty"` // false,
 	StorageElementId    *Id    `json:"storageElementId,omitempty"`
 	DiskWriteMode       string `json:"diskWriteMode,omitempty"` // "READ_ONLY",READ_WRITE
